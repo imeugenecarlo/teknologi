@@ -37,7 +37,7 @@ def handleClient(connectionSocket,addr):
             add_num = num1 + num2
             response =str(add_num)
         elif sentence.startswith("Subtract"):
-            response = "Input numbers to find the sum"
+            response = "Input numbers to substract"
             connectionSocket.send(response.encode())
 
             input_numbers = connectionSocket.recv(1024).decode().strip()
