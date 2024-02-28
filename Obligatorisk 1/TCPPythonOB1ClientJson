@@ -9,7 +9,7 @@ keep_communicating = True
 
 while keep_communicating:
     sentence = input('From Client: ')
-    if sentence == "exit":
+    if sentence == "close":
         keep_communicating = False
     else:
         clientSocket.send(sentence.encode())
