@@ -1,66 +1,79 @@
 from socket import *
 import threading
 import random
+import json
 
-def handleClient(connectionSocket,addr):
+def handleClient(connectionSocket, addr):
     print(addr[0])
     keep_communicating = True
 
     while keep_communicating:
-        sentence = connectionSocket.recv(1024).decode()
-        #print(sentence)
-        response = "error, please send a proper message"
-        if sentence.strip()== "close":
-            keep_communicating = False
-            response ="closing the connection"
+        received_data = connectionSocket.recv(1024).decode()
+        #print("Received JSON data from client:", received_data)
+        
+        try:
+            client_data = json.loads(received_data)
+        except json.JSONDecodeError:
+            response = "Invalid JSON format received"
+            connectionSocket.send(response.encode())
+            continue
 
-        elif sentence.startswith("Random"):
-            response = "Please input first number\n"
-            connectionSocket.send(response.encode()) 
-            input_number1= connectionSocket.recv(1024).decode()
+        if 'sentence' in client_data:
+            sentence = client_data['sentence']
 
-            response = "Please input Second number\n"
-            connectionSocket.send(response.encode()) 
-            input_number2=connectionSocket.recv(1024).decode()
+            response = "error, please send a proper message"
+            if sentence.strip() == "close":
+                keep_communicating = False
+                response = "closing the connection"
 
-            num1 = int(input_number1.strip())  
-            num2 = int(input_number2.strip())       
+            elif sentence.startswith("Random"):
+                response = "Please input first number\n"
+                connectionSocket.send(response.encode()) 
+                input_number1 = connectionSocket.recv(1024).decode()
 
-            random_num = random.randint(num1, num2)
-            response = f"{random_num}"
+                response = "Please input Second number\n"
+                connectionSocket.send(response.encode()) 
+                input_number2 = connectionSocket.recv(1024).decode()
 
-        elif sentence.startswith("Add"):
-            
-            response = "Please input first number\n"
-            connectionSocket.send(response.encode()) 
-            input_number1= connectionSocket.recv(1024).decode()
+                num1 = int(input_number1.strip())  
+                num2 = int(input_number2.strip())       
 
-            response = "Please input Second number\n"
-            connectionSocket.send(response.encode()) 
-            input_number2=connectionSocket.recv(1024).decode()
+                random_num = random.randint(num1, num2)
+                response = str(random_num)
 
-            num1 = int(input_number1.strip())  
-            num2 = int(input_number2.strip())  
+            elif sentence.startswith("Add"):
+                response = "Please input first number\n"
+                connectionSocket.send(response.encode()) 
+                input_number1 = connectionSocket.recv(1024).decode()
 
-            add_num = num1 + num2
-            response = f"{add_num}"
+                response = "Please input Second number\n"
+                connectionSocket.send(response.encode()) 
+                input_number2 = connectionSocket.recv(1024).decode()
 
-        elif sentence.startswith("Subtract"):
+                num1 = int(input_number1.strip())  
+                num2 = int(input_number2.strip())  
 
-            response = "Please input first number\n"
-            connectionSocket.send(response.encode()) 
-            input_number1= connectionSocket.recv(1024).decode()
+                add_num = num1 + num2
+                response = str(add_num)
 
-            response = "Please input Second number\n"
-            connectionSocket.send(response.encode()) 
-            input_number2=connectionSocket.recv(1024).decode()
+            elif sentence.startswith("Subtract"):
+                response = "Please input first number\n"
+                connectionSocket.send(response.encode()) 
+                input_number1 = connectionSocket.recv(1024).decode()
 
-            num1 = int(input_number1.strip())  
-            num2 = int(input_number2.strip()) 
+                response = "Please input Second number\n"
+                connectionSocket.send(response.encode()) 
+                input_number2 = connectionSocket.recv(1024).decode()
 
-            sub_num = num1 - num2
-            response = f"{sub_num}"
-        connectionSocket.send(response.encode())
+                num1 = int(input_number1.strip())  
+                num2 = int(input_number2.strip()) 
+
+                sub_num = num1 - num2
+                response = str(sub_num)
+            connectionSocket.send(response.encode())
+        else:
+            response = "No 'message' field found in JSON data"
+            connectionSocket.send(response.encode())
 
     connectionSocket.close()
 

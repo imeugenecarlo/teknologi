@@ -1,5 +1,5 @@
 from socket import *
-
+import json
 serverName = "localhost"
 serverPort = 12000
 clientSocket = socket(AF_INET, SOCK_STREAM)
@@ -11,8 +11,17 @@ while keep_communicating:
     sentence = input('From Client: ')
     if sentence == "exit":
         keep_communicating = False
-    else:
-        clientSocket.send(sentence.encode())
+    data = {"sentence": sentence}
+
+    if sentence in ["Random", "Add", "Subtract"]:
+        data['Tal1'] = int(input('Enter first number: '))
+        data['Tal2'] = int(input('Enter second number: '))
+    
+        
+        json_data = json.dumps(data)
+        print("Sending JSON data to server:", json_data)
+        clientSocket.send(json_data.encode())
+
         modifiedSentence = clientSocket.recv(1024)
         print('From server: ', modifiedSentence.decode())
 clientSocket.close()
