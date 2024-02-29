@@ -28,10 +28,7 @@ def handleClient(connectionSocket,addr):
 
             random_num = random.randint(num1, num2)
             response = f"{random_num}"
-          #  if sentence.
-          #      random.randint(a1,a2)
-          #  reponse ="{a1},{a2}"   
-          #  connectionSocket.send(response.encode())   
+
         elif sentence.startswith("Add"):
             
             response = "Please input first number\n"
