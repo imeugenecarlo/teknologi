@@ -16,7 +16,7 @@ def handleClient(connectionSocket,addr):
             response ="closing the connection"
 
         elif sentence.startswith("Random"):
-            response = "Input number"
+            response = "Input number to randomize"
             connectionSocket.send(response.encode()) 
 
             input_numbers= connectionSocket.recv(1024).decode().strip()

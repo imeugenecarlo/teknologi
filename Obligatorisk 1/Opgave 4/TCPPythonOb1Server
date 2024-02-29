@@ -4,47 +4,65 @@ import random
 
 def handleClient(connectionSocket,addr):
     print(addr[0])
-    keep_communacating = True
+    keep_communicating = True
 
-    while keep_communacating:
+    while keep_communicating:
         sentence = connectionSocket.recv(1024).decode()
         #print(sentence)
         response = "error, please send a proper message"
         if sentence.strip()== "close":
-            keep_communacating = False
+            keep_communicating = False
             response ="closing the connection"
 
         elif sentence.startswith("Random"):
-            response = "Input number"
+            response = "Please input first number\n"
             connectionSocket.send(response.encode()) 
+            input_number1= connectionSocket.recv(1024).decode()
 
-            input_numbers= connectionSocket.recv(1024).decode().strip()
-            num1, num2 = map(int, input_numbers.split())         
+            response = "Please input Second number\n"
+            connectionSocket.send(response.encode()) 
+            input_number2=connectionSocket.recv(1024).decode()
+
+            num1 = int(input_number1.strip())  
+            num2 = int(input_number2.strip())       
 
             random_num = random.randint(num1, num2)
-            response = str(random_num)
+            response = f"{random_num}"
           #  if sentence.
           #      random.randint(a1,a2)
           #  reponse ="{a1},{a2}"   
           #  connectionSocket.send(response.encode())   
         elif sentence.startswith("Add"):
-            response = "Input numbers to find the sum"
-            connectionSocket.send(response.encode())
+            
+            response = "Please input first number\n"
+            connectionSocket.send(response.encode()) 
+            input_number1= connectionSocket.recv(1024).decode()
 
-            input_numbers = connectionSocket.recv(1024).decode().strip()
-            num1, num2 = map(int, input_numbers.split())  
+            response = "Please input Second number\n"
+            connectionSocket.send(response.encode()) 
+            input_number2=connectionSocket.recv(1024).decode()
+
+            num1 = int(input_number1.strip())  
+            num2 = int(input_number2.strip())  
 
             add_num = num1 + num2
-            response =str(add_num)
-        elif sentence.startswith("Subtract"):
-            response = "Input numbers to substract"
-            connectionSocket.send(response.encode())
+            response = f"{add_num}"
 
-            input_numbers = connectionSocket.recv(1024).decode().strip()
-            num1, num2 = map(int, input_numbers.split())  
+        elif sentence.startswith("Subtract"):
+
+            response = "Please input first number\n"
+            connectionSocket.send(response.encode()) 
+            input_number1= connectionSocket.recv(1024).decode()
+
+            response = "Please input Second number\n"
+            connectionSocket.send(response.encode()) 
+            input_number2=connectionSocket.recv(1024).decode()
+
+            num1 = int(input_number1.strip())  
+            num2 = int(input_number2.strip()) 
 
             sub_num = num1 - num2
-            response =str(sub_num)
+            response = f"{sub_num}"
         connectionSocket.send(response.encode())
 
     connectionSocket.close()
