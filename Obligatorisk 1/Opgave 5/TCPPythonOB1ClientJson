@@ -1,5 +1,4 @@
 from socket import *
-import json
 
 serverName = "localhost"
 serverPort = 12000
@@ -10,7 +9,7 @@ keep_communicating = True
 
 while keep_communicating:
     sentence = input('From Client: ')
-    if sentence == "close":
+    if sentence == "exit":
         keep_communicating = False
     else:
         clientSocket.send(sentence.encode())
